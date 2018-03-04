@@ -1,19 +1,45 @@
 'use strict';
+let five = require('johnny-five');
 
-var five = require('johnny-five');
-var board = new five.Board();
+let board = new five.Board();
 
 board.on('ready', () => {
-  // var ledArr = new five.Leds([2,3,4,5,6,7]);
-  // board.repl.inject({ leds: ledArr });
-  // ledArr.blink();
+  let tilt = new five.Switch(13);
+  let first = 2;
+  let last = 8;
+  let leds = assignLeds(first, last);
+  let prevTime = 0;
+  let currentTime = board.millis();  
+  let interval = 600000;
+  let tiltState = 0;
+  let prevTiltState = 0;
 
-  var tilt = new five.Button(8);
+  if ((currentTime - prevTime) > interval) {
+    prevTime = currentTime;
+    leds[first].on();
+    first++
+    if (first === last +1) {
+      leds.forEach(led => led.off());
+    }
+  } 
 
-  tilt.on('down', () => console.log('down'));
-  tilt.on('up', () => console.log('up'));
+  tiltState = board.digitalRead(13, val => val);
 
+  if (tiltState !== prevTiltState){
+    ledsOff(leds);
+    first = 2;
+  }
 
-
+  prevTiltState = tiltState;
+  
 });
 
+const assignLeds = (first, last) => {
+  let arr = [];
+  for (let i = first; i <= last; i++){
+    arr.push(new five.Led(i));
+  }
+  return arr;
+};
+
+const ledsOff = (ledArr) => ledArr.forEach(led => led.off());
