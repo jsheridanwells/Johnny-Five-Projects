@@ -4,4 +4,4 @@ This is a repo for storing sketches and notes for electronics projects built wit
 
 __Contents:__
 
-1. [Hello World]()
+1. [Hello World](https://github.com/jsheridanwells/Johnny-Five-Projects/tree/master/hello-world)
